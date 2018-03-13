@@ -62,12 +62,9 @@ public class LockOnController : MonoBehaviour {
 			lockonCounter.enabled = false;
 			return false;
 		}
-		lockOnCount = 0;
-
 	}
 
 	IEnumerator AcquireLockOn() {
-		Debug.Log ("locking on");
 		yield return new WaitForSeconds (startWait);
 		while (lockOnCount < lockOnMax && lockingOn) {
 			tir.ScanInSphere ();

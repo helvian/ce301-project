@@ -15,7 +15,7 @@ public class MoveToWaypoint : MonoBehaviour {
 		possibleWaypoints [1] = GameObject.Find ("Top Right Waypoint").transform;
 		possibleSpawns [0] = GameObject.Find ("Spawn Top Left").transform;
 		possibleSpawns [1] = GameObject.Find ("Spawn Top Right").transform;
-		position = Random.Range (0, 1);
+		position = Random.Range (0, 2);
 		if (position == 0) {
 			gameObject.transform.position = possibleSpawns [0].position;
 		} else {
@@ -26,8 +26,6 @@ public class MoveToWaypoint : MonoBehaviour {
 
 	void FixedUpdate() {
 		if (position == 0) {
-			Debug.Log ("lerp");
-			Debug.Log (possibleWaypoints [0].position);
 			transform.position = Vector3.MoveTowards (transform.position, possibleWaypoints [0].position, step * Time.deltaTime);
 		} else {
 			transform.position = Vector3.MoveTowards (transform.position, possibleWaypoints [1].position, 1f * Time.deltaTime);

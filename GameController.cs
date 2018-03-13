@@ -13,6 +13,7 @@ public class GameController : MonoBehaviour {
 	public float spawnWait;
 	public float startWait;
 	public float waveWait;
+	public float largeWait;
 	public float wavesSpawned;
 	public int bossThreshold;
 
@@ -21,27 +22,26 @@ public class GameController : MonoBehaviour {
 	public Text gameOverText;
 	private int score;
 
-	public int wavePattern;
-	private int numPatterns = 4;
+	private int wavePattern;
+	private int numPatterns = 5;
+	private int largeEnemy;
+	private int numLargeEnemies = 2;
 
 	public int lives;
 	private bool bossSpawned;
-	private bool gameOver;
 	private bool restart;
-	private bool stageComplete;
 
 	public PlayerController pc;
 	public TextController tc;
 
 	void Start(){
 		tc = GetComponent<TextController> ();
-		gameOver = false;
 		restart = false;
-		stageComplete = false;
 		score = 0;
 		healthText.text = "Health: " + pc.ps.health.ToString ();
 		tc.UpdateScore (score);
 		StartCoroutine (SpawnWaves ());
+		StartCoroutine (SpawnLarge ());
 	}
 
 	void Update() {
@@ -54,7 +54,7 @@ public class GameController : MonoBehaviour {
 
 	IEnumerator SpawnWaves(){
 		yield return new WaitForSeconds (startWait);
-		wavePattern = Random.Range (1, numPatterns+1);
+		wavePattern = Random.Range (4, 5);
 		while (!bossSpawned) {
 			//check if boss should spawn
 			if (wavesSpawned > bossThreshold) {
@@ -129,21 +129,44 @@ public class GameController : MonoBehaviour {
 					break;
 				}
 			
-				wavePattern = Random.Range (1, numPatterns + 1);
+				wavePattern = Random.Range (2, 3);
 				wavesSpawned++;
 
-				//spawning powerup carriers
-				if (bossThreshold % wavesSpawned >= 2) {
-					Vector3 spawnPosition = new Vector3 (100, 0, 100);
-					Quaternion spawnRotation = (Quaternion.identity * Quaternion.Euler (0, 0, 0));
-					Instantiate (hazards [4], spawnPosition, spawnRotation);
-				}
 				yield return new WaitForSeconds (waveWait);
 			}
 
 			if (pc.ps.health <= 0) {
 				restart = true;
 				tc.ShowRestart ();
+				break;
+			}
+		}
+	}
+
+	IEnumerator SpawnLarge(){
+		yield return new WaitForSeconds (startWait);
+		while (!bossSpawned) {
+			yield return new WaitForSeconds (largeWait);
+			largeEnemy = Random.Range (1, numLargeEnemies + 1);
+			Vector3 spawnPosition;
+			Quaternion spawnRotation;
+			if (!bossSpawned) {
+				switch (largeEnemy) {
+				case (1):
+					spawnPosition = new Vector3 (100, 0, 100);
+					spawnRotation = (Quaternion.identity * Quaternion.Euler (0, 0, 0));
+					Instantiate (hazards [4], spawnPosition, spawnRotation);
+					break;
+				case (2):
+					spawnPosition = spawnValues [0].transform.position;
+					spawnPosition += new Vector3 (Random.Range(-5, 5), 0, 0);
+					spawnRotation = (Quaternion.identity * Quaternion.Euler (0, 0, 0));
+					Instantiate (hazards [6], spawnPosition, spawnRotation);
+
+					break;
+				}
+			}
+			if (pc.ps.health <= 0) {
 				break;
 			}
 		}

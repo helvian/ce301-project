@@ -2,8 +2,6 @@
 using System.Collections;
 
 public class ParticleEnemyController : MonoBehaviour {
-	private Rigidbody rb;
-
 	public GameObject spray;
 
 	public GameObject powerUp;
@@ -15,7 +13,6 @@ public class ParticleEnemyController : MonoBehaviour {
 
 	void Start () {
 		es = GetComponent<EnemyStats> ();
-		rb = GetComponent<Rigidbody> ();
 		tc = GameObject.FindGameObjectWithTag ("GameController").GetComponent<TextController> ();
 	}
 

@@ -12,23 +12,21 @@ public class DestroyByContact : MonoBehaviour {
 	private EnemyController enemyController;
 	private SideEnemyController sideEnemyController;
 	private PowerupController powerupController;
-	public ParticleEnemyController particleEnemyController;
+	private ParticleEnemyController particleEnemyController;
 	private MissileSeek missileSeek;
 
 	void Start() {
 		dead = false;
 		playerController = GameObject.FindObjectOfType<PlayerController>();
-		enemyController = GameObject.FindObjectOfType<EnemyController> ();
-		sideEnemyController = GameObject.FindObjectOfType<SideEnemyController> ();
 		powerupController = GameObject.FindObjectOfType<PowerupController> ();
-		particleEnemyController = GameObject.FindObjectOfType<ParticleEnemyController> ();
-		missileSeek = GameObject.FindObjectOfType<MissileSeek> ();
+		enemyController = gameObject.GetComponent<EnemyController> ();
+		sideEnemyController = gameObject.GetComponent<SideEnemyController> ();
+
+		particleEnemyController = gameObject.GetComponent<ParticleEnemyController> ();
+		missileSeek = gameObject.GetComponent<MissileSeek> ();
 	}
 
 	void OnTriggerEnter(Collider other) {
-		if (gameObject.GetComponentInChildren<ScanBox> () != null) {
-			return;
-		}
 		if (other.tag == "Boundary") {
 			return;
 		}
@@ -44,11 +42,14 @@ public class DestroyByContact : MonoBehaviour {
 				Destroy (gameObject);
 			} 
 			else if (!playerController.ps.invincible) {
-				playerController.TakeDamage ();
-				Destroy (gameObject);
+				if (gameObject.GetComponentInChildren<ScanBox> () == null) {
+					playerController.TakeDamage ();
+					Destroy (gameObject);
+				}
 			}
 		} else {
 			if (enemyController != null) {
+				Debug.Log("name: " + gameObject.name);
 				enemyController.TakeDamage (playerController.ps.damage);
 				Destroy (other.gameObject);
 			} else if (sideEnemyController != null) {

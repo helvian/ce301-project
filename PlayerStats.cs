@@ -10,6 +10,8 @@ public class PlayerStats : MonoBehaviour {
 	public int maxShots;
 	public float fireRate;
 	public float nextFire;
+	public float homingCD;
+	public float nextHoming;
 	public float damage;
 
 	public int health;

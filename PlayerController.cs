@@ -62,11 +62,12 @@ public class PlayerController : MonoBehaviour
 				au[0].PlayOneShot (au[0].clip);
 			}
 		} else if (weap == Weapon.LockOn) {
-			if (Input.GetButtonDown ("Fire1")) { 
+			if (Input.GetButtonDown ("Fire1") && Time.time > ps.nextHoming) { 				
 				loc.LockOn ();
 			}
 			if (Input.GetButtonUp ("Fire1")) {
 				if (loc.Fire ()) {
+					ps.nextHoming = Time.time + ps.homingCD;
 					au [1].PlayOneShot (au [1].clip);
 				};
 			}
@@ -77,7 +78,7 @@ public class PlayerController : MonoBehaviour
 		if (Input.GetButtonDown ("Fire2")) {
 			InvertPolarity ();
 		}
-		if (Input.GetButtonDown ("Fire3")) {
+		if (Input.GetButtonDown ("Fire3") && !Input.GetButton("Fire1")) {
 			ChangeWeapon ();
 		}
 		if (ps.invincible && !timerOn) {
