@@ -15,12 +15,14 @@ public class SideEnemyController : MonoBehaviour {
 	public GameObject spray;
 
 	private EnemyStats es;
+	private EffectOnDeath eod;
 	public TextController tc;
 
 	public ScanBox sb;
 
 	void Start () {
 		es = GetComponent<EnemyStats> ();
+		eod = GetComponent<EffectOnDeath> ();
 		rb = GetComponent<Rigidbody> ();
 		rb.velocity = transform.forward * es.speed;
 		sb = GetComponent<ScanBox> ();
@@ -51,6 +53,7 @@ public class SideEnemyController : MonoBehaviour {
 	}
 
 	void Death() {
+		eod.SpawnEffect ();
 		dead = true;
 		tc.UpdateScore (es.score);
 		shot.Stop ();
@@ -61,7 +64,8 @@ public class SideEnemyController : MonoBehaviour {
 		tempVec.z = 1 /shot.transform.parent.lossyScale.z;
 		shot.transform.localScale = tempVec;
 		shot.transform.parent = GameObject.Find("Dead Particles").transform;
-		Destroy (shot, 10.0f);
+		Destroy (shot);
+		Destroy (shot.gameObject, 10.0f);
 		Destroy (gameObject);
 	}
 }

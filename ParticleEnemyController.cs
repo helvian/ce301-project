@@ -10,8 +10,10 @@ public class ParticleEnemyController : MonoBehaviour {
 
 	private EnemyStats es;
 	public TextController tc;
+	private EffectOnDeath eod;
 
 	void Start () {
+		eod = GetComponent<EffectOnDeath> ();
 		es = GetComponent<EnemyStats> ();
 		tc = GameObject.FindGameObjectWithTag ("GameController").GetComponent<TextController> ();
 	}
@@ -29,6 +31,7 @@ public class ParticleEnemyController : MonoBehaviour {
 
 	void Death() {
 		dead = true;
+		eod.SpawnEffect ();
 		if (dropsPowerUp) {
 			Instantiate (powerUp, transform.position, Quaternion.Euler(90, 0, 0));
 		}

@@ -44,6 +44,8 @@ public class HomingAttack : MonoBehaviour {
 
 			rb.velocity = currentVelocity;
 			rb.mass = rb.mass * 0.92f;
+			speed *= 1.005f;
+			Mathf.Clamp (speed, 0, 80);
 
 			transform.rotation = Quaternion.LookRotation (currentVelocity);
 		}

@@ -7,10 +7,10 @@ public class LockOnController : MonoBehaviour {
 
 	public Collider lockOnZone;
 	public MeshRenderer lockOnZoneVisible;
-	public float lockOnRate;
+	//public float lockOnRate;
 	public float startWait;
 	public float lockOnCount = 0;
-	public float lockOnMax = 20;
+	//public float lockOnMax = 20;
 	public bool lockingOn;
 	public GetTargetsInRange tir;
 	public GameObject homingProjectile;
@@ -18,11 +18,13 @@ public class LockOnController : MonoBehaviour {
 	public HomingAttack homingProjectileTarget;
 	private HashSet<GameObject> lockedOnTargets;
 	private Text lockonCounter;
+	private PlayerStats ps;
 
 	void Start() {
 		lockOnZone = GameObject.FindGameObjectWithTag ("Lockon").GetComponent<Collider> ();
 		lockOnZoneVisible = GameObject.FindGameObjectWithTag ("Lockon").GetComponent<MeshRenderer> ();
 		lockonCounter = gameObject.GetComponentInChildren<Text> ();
+		ps = GetComponent<PlayerStats> ();
 		tir = GetComponent<GetTargetsInRange> ();
 	}
 
@@ -66,11 +68,11 @@ public class LockOnController : MonoBehaviour {
 
 	IEnumerator AcquireLockOn() {
 		yield return new WaitForSeconds (startWait);
-		while (lockOnCount < lockOnMax && lockingOn) {
+		while (lockOnCount < ps.lockOnMax && lockingOn) {
 			tir.ScanInSphere ();
 			if (tir.targetsInRange.Count > 0) {
 				foreach (Collider c in tir.targetsInRange) {
-					if (lockOnCount < lockOnMax) {
+					if (lockOnCount < ps.lockOnMax) {
 						LockOnTarget l = c.gameObject.GetComponent<LockOnTarget> ();
 						l.lockedOn++;
 						lockOnCount++;
@@ -78,7 +80,7 @@ public class LockOnController : MonoBehaviour {
 				};
 			}
 			lockonCounter.text = lockOnCount.ToString();
-			yield return new WaitForSeconds (lockOnRate);
+			yield return new WaitForSeconds (ps.lockOnRate);
 		}
 		yield break;
 	}

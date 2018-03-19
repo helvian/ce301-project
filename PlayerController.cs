@@ -8,7 +8,7 @@ public class Boundary
 }
 
 public enum Weapon {
-	Normal, LockOn
+	Gatling, LockOn
 };
 
 public class PlayerController : MonoBehaviour
@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
 	void Start ()
 	{
-		weap = Weapon.Normal;
+		weap = Weapon.Gatling;
 		ps = GetComponent<PlayerStats> ();
 		ps.invincible = true;
 		ps.numShots = 2;
@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
 	}
 
 	void Update () {
-		if (weap == Weapon.Normal) {
+		if (weap == Weapon.Gatling) {
 			if (Input.GetButton ("Fire1") && Time.time > ps.nextFire) {
 				ps.nextFire = Time.time + ps.fireRate;
 				for (int i = 0; i < ps.numShots; i++) {
@@ -62,7 +62,8 @@ public class PlayerController : MonoBehaviour
 				au[0].PlayOneShot (au[0].clip);
 			}
 		} else if (weap == Weapon.LockOn) {
-			if (Input.GetButtonDown ("Fire1") && Time.time > ps.nextHoming) { 				
+			if (Input.GetButtonDown ("Fire1") && Time.time > ps.nextHoming) { 	
+				ps.nextHoming = Time.time + ps.homingCD;
 				loc.LockOn ();
 			}
 			if (Input.GetButtonUp ("Fire1")) {
@@ -148,11 +149,12 @@ public class PlayerController : MonoBehaviour
 	}
 
 	void ChangeWeapon() {
-		if (weap == Weapon.Normal) {
+		if (weap == Weapon.Gatling) {
 			weap++;
 		} else {
-			weap = Weapon.Normal;
+			weap = Weapon.Gatling;
 		}
+		tc.UpdateWeapon (weap.ToString ());
 
 	}
 }

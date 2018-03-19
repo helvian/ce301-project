@@ -21,7 +21,6 @@ public class DestroyByContact : MonoBehaviour {
 		powerupController = GameObject.FindObjectOfType<PowerupController> ();
 		enemyController = gameObject.GetComponent<EnemyController> ();
 		sideEnemyController = gameObject.GetComponent<SideEnemyController> ();
-
 		particleEnemyController = gameObject.GetComponent<ParticleEnemyController> ();
 		missileSeek = gameObject.GetComponent<MissileSeek> ();
 	}

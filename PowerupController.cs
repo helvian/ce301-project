@@ -38,39 +38,45 @@ public class PowerupController : MonoBehaviour {
 	public void CashInPowerups() {
 		switch (powerupsHeld) {
 		case 0:
-			Debug.Log ("nothing happens");
 			break;
-		case 4:
-			ps.speed += 2;
-			Mathf.Clamp (ps.speed, 12, ps.maxSpeed);
-			if (ps.speed == ps.maxSpeed) {
-				powerupBarTexts [powerupsHeld - 1].enabled = false;
+		case 1:
+			if (ps.speed < ps.maxSpeed) {
+				ps.speed += 2;
+				Mathf.Clamp (ps.speed, 12, ps.maxSpeed);
+				if (ps.speed == ps.maxSpeed) {
+					powerupBarTexts [powerupsHeld - 1].enabled = false;
+				}
+				powerupBars [powerupsHeld - 1].color = new Color (255, 255, 255, 255);
+				powerupsHeld = 0;
 			}
-			Debug.Log ("speed");
 			break;
 		case 2:
 			ps.health++;
 			tc.UpdateHealth (ps.health);
-			Debug.Log ("health");
+			powerupBars [powerupsHeld - 1].color = new Color (255, 255, 255, 255);
+			powerupsHeld = 0;
 			break;
 		case 3:
-			ps.numShots++;
-			Mathf.Clamp (ps.numShots, 2, ps.maxShots);
-			if (ps.numShots == ps.maxShots) {
-				powerupBarTexts [powerupsHeld - 1].enabled = false;
+			if (ps.numShots < ps.maxShots) {
+				ps.numShots++;
+				ps.lockOnMax += 5;
+				ps.lockOnRate -= 0.125f;
+				Mathf.Clamp (ps.numShots, 2, ps.maxShots);
+				if (ps.numShots == ps.maxShots) {
+					powerupBarTexts [powerupsHeld - 1].enabled = false;
+				}
+				powerupBars [powerupsHeld - 1].color = new Color (255, 255, 255, 255);
+				powerupsHeld = 0;
 			}
-			Debug.Log ("weapon power");
 			break;
-		case 1:
+		case 4:
 			optionsSpawned++;
 			Instantiate (option, player.transform.position, Quaternion.Euler (90, 0, 0));
-			Debug.Log ("4");
+			powerupBars [powerupsHeld - 1].color = new Color (255, 255, 255, 255);
+			powerupsHeld = 0;
 			break;
 		case 5:
-			Debug.Log ("5");
 			break;
 		}
-		powerupBars [powerupsHeld - 1].color = new Color (255, 255, 255, 255);
-		powerupsHeld = 0;
 	}
 }

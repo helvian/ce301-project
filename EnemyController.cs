@@ -18,10 +18,12 @@ public class EnemyController : MonoBehaviour {
 	private bool dead = false;
 
 	private EnemyStats es;
+	private EffectOnDeath eod;
 	public TextController tc;
 
 	void Start () {
 		es = GetComponent<EnemyStats> ();
+		eod = GetComponent<EffectOnDeath> ();
 		rb = GetComponent<Rigidbody> ();
 		shot = GetComponentInChildren<ParticleSystem> ();
 		rb.velocity = transform.forward * es.speed;
@@ -46,6 +48,7 @@ public class EnemyController : MonoBehaviour {
 	}
 
 	void Death() {
+		eod.SpawnEffect ();
 		dead = true;
 		if (dropsPowerUp) {
 			Instantiate (powerUp, transform.position, Quaternion.Euler(90, 0, 0));
@@ -59,7 +62,7 @@ public class EnemyController : MonoBehaviour {
 		tempVec.z = 1 /shot.transform.parent.lossyScale.z;
 		shot.transform.localScale = tempVec;
 		shot.transform.parent = GameObject.Find("Dead Particles").transform;
-		Destroy (shot, 10.0f);
+		Destroy (shot.gameObject, 10.0f);
 		Destroy (gameObject);
 	}
 }

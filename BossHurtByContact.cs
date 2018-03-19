@@ -4,16 +4,18 @@ using System.Collections;
 
 public class BossHurtByContact : MonoBehaviour {
 
-	private Boss1Controller bossController;
+	private Boss1Controller boss1Controller;
+	private Boss2Controller boss2Controller;
 	private PlayerController playerController;
-	public GameObject hitLight;
-	public Light flash;
+	//public GameObject hitLight;
+	//public Light flash;
 
 	void Start () {
-		bossController = GetComponent<Boss1Controller> ();
+		boss1Controller = GetComponent<Boss1Controller> ();
+		boss2Controller = GetComponent<Boss2Controller> ();
 		playerController = GameObject.FindObjectOfType<PlayerController>();
-		hitLight = GameObject.FindGameObjectWithTag ("Hit Flash");
-		flash = hitLight.GetComponent<Light> ();
+		//hitLight = GameObject.FindGameObjectWithTag ("Hit Flash");
+		//flash = hitLight.GetComponent<Light> ();
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -24,19 +26,22 @@ public class BossHurtByContact : MonoBehaviour {
 			if (!playerController.ps.invincible) {
 				playerController.TakeDamage ();
 			}
-		} else {
-			bossController.TakeDamage (playerController.ps.damage);
-			StartCoroutine (HitFlash ());
+		} else if (boss1Controller != null) {
+			boss1Controller.TakeDamage (playerController.ps.damage);
+			//StartCoroutine (HitFlash ());
+			Destroy (other.gameObject);
+		} else if (boss2Controller != null) {
+			boss2Controller.TakeDamage (playerController.ps.damage);
 			Destroy (other.gameObject);
 		}
 	}
 
-	IEnumerator HitFlash(){
+	/*IEnumerator HitFlash(){
 		if (!flash.enabled) {
 			flash.enabled = true;
 		}
 		yield return 10;
 		flash.enabled = false;
 		yield break;
-	}
+	}*/
 }

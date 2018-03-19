@@ -14,8 +14,12 @@ public class MissileSeek : MonoBehaviour {
 
 	public EnemyStats es;
 	public TextController tc;
+	private EffectOnDeath eod;
+
+	private bool dead = false;
 
 	void Start () {
+		eod = GetComponent<EffectOnDeath> ();
 		es = GetComponent<EnemyStats> ();
 		target = GameObject.FindGameObjectWithTag ("Player");
 		rb = GetComponent<Rigidbody> ();
@@ -48,8 +52,16 @@ public class MissileSeek : MonoBehaviour {
 	public void TakeDamage(float damage) {
 		es.health -= damage;
 		if (es.health <= 0) {
-			tc.UpdateScore (es.score);
-			Destroy (gameObject);
+			if (!dead) {
+				Death ();
+			}
 		}
+	}
+
+	void Death() {
+		eod.SpawnEffect ();
+		dead = true;
+		tc.UpdateScore (es.score);
+		Destroy (gameObject);
 	}
 }

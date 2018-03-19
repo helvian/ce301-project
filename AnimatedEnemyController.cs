@@ -14,10 +14,12 @@ public class AnimatedEnemyController : MonoBehaviour {
 	public GameObject spray;
 
 	private EnemyStats es;
+	private EffectOnDeath eod;
 	public TextController tc;
 
 	void Start () {
 		es = GetComponent<EnemyStats> ();
+		eod = GetComponent<EffectOnDeath> ();
 		an = GetComponent<Animator> ();
 		shot = GetComponentInChildren<ParticleSystem> ();
 		tc = GameObject.FindGameObjectWithTag ("GameController").GetComponent<TextController> ();
@@ -40,6 +42,7 @@ public class AnimatedEnemyController : MonoBehaviour {
 	}
 
 	void Death() {
+		eod.SpawnEffect ();
 		dead = true;
 		tc.UpdateScore (es.score);
 		shot.Stop ();
@@ -50,7 +53,7 @@ public class AnimatedEnemyController : MonoBehaviour {
 		tempVec.z = 1 /shot.transform.parent.lossyScale.z;
 		shot.transform.localScale = tempVec;
 		shot.transform.parent = GameObject.Find("Dead Particles").transform;
-		Destroy (shot, 10.0f);
+		Destroy (shot.gameObject, 10.0f);
 		Destroy (gameObject);
 	}
 }

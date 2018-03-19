@@ -8,7 +8,6 @@ public class GameController : MonoBehaviour {
 	public GameObject[] hazards;
 	public GameObject player;
 	public GameObject[] spawnValues;
-	public int hazardCount;
 
 	public float spawnWait;
 	public float startWait;
@@ -27,12 +26,13 @@ public class GameController : MonoBehaviour {
 	private int largeEnemy;
 	private int numLargeEnemies = 2;
 
-	public int lives;
-	private bool bossSpawned;
+	private bool boss1Spawned;
+	public bool boss1Dead;
 	private bool restart;
 
 	public PlayerController pc;
 	public TextController tc;
+	public AudioSource music;
 
 	void Start(){
 		tc = GetComponent<TextController> ();
@@ -40,8 +40,10 @@ public class GameController : MonoBehaviour {
 		score = 0;
 		healthText.text = "Health: " + pc.ps.health.ToString ();
 		tc.UpdateScore (score);
+		music = GameObject.Find ("Music").GetComponent<AudioSource> ();
 		StartCoroutine (SpawnWaves ());
 		StartCoroutine (SpawnLarge ());
+		StartCoroutine (SpawnBoss2 ());
 	}
 
 	void Update() {
@@ -54,16 +56,19 @@ public class GameController : MonoBehaviour {
 
 	IEnumerator SpawnWaves(){
 		yield return new WaitForSeconds (startWait);
-		wavePattern = Random.Range (4, 5);
-		while (!bossSpawned) {
+		wavePattern = Random.Range (0, numPatterns+1);
+		while (!boss1Spawned) {
 			//check if boss should spawn
 			if (wavesSpawned > bossThreshold) {
-				if (!bossSpawned) {
+				if (!boss1Spawned) {
+					music.Stop ();
+					music.clip = Resources.Load ("Music/Darkling") as AudioClip;
+					music.Play ();
 					Instantiate (hazards [3], new Vector3 (99, 99, 10), Quaternion.Euler (0, 270, 0));
-					bossSpawned = true;
+					boss1Spawned = true;
 				}
 			}	
-			if (!bossSpawned) {
+			if (!boss1Spawned) {
 				switch (wavePattern) {
 				case (1):
 					spawnWait = 0.5f;
@@ -129,7 +134,7 @@ public class GameController : MonoBehaviour {
 					break;
 				}
 			
-				wavePattern = Random.Range (2, 3);
+				wavePattern = Random.Range (0, numPatterns+1);
 				wavesSpawned++;
 
 				yield return new WaitForSeconds (waveWait);
@@ -145,12 +150,12 @@ public class GameController : MonoBehaviour {
 
 	IEnumerator SpawnLarge(){
 		yield return new WaitForSeconds (startWait);
-		while (!bossSpawned) {
+		while (!boss1Spawned) {
 			yield return new WaitForSeconds (largeWait);
 			largeEnemy = Random.Range (1, numLargeEnemies + 1);
 			Vector3 spawnPosition;
 			Quaternion spawnRotation;
-			if (!bossSpawned) {
+			if (!boss1Spawned) {
 				switch (largeEnemy) {
 				case (1):
 					spawnPosition = new Vector3 (100, 0, 100);
@@ -171,4 +176,17 @@ public class GameController : MonoBehaviour {
 			}
 		}
 	}
+
+	IEnumerator SpawnBoss2(){
+		while (!boss1Dead) {
+			if (pc.ps.health <= 0) {
+				restart = true;
+				tc.ShowRestart ();
+				break;
+			}
+			yield return new WaitForSeconds (10f);
+		}
+		Instantiate (hazards [7], new Vector3 (99, 99, 10), Quaternion.identity);
+	}
+
 }

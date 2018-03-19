@@ -20,20 +20,26 @@ public class Boss1Controller : MonoBehaviour {
 	public Slider healthBar;
 
 	private BossStats bs;
-	private BossMovement bm;
+	private Boss1Movement bm;
+	private EffectOnDeath eod;
+	private GameController gc;
 
 	// Use this for initialization
 	void Start () {
 		clip.Play ();
 		bs = GetComponent<BossStats> ();
-		bm = GetComponent<BossMovement> ();
+		bm = GetComponent<Boss1Movement> ();
+		eod = GetComponent<EffectOnDeath> ();
+		gc = GameObject.Find ("Game Controller").GetComponent<GameController> ();
 		spawn = GameObject.Find ("Projectiles");
 		if (player = GameObject.FindGameObjectWithTag ("Player")){
 			StartCoroutine (AimTurrets ());
 			StartCoroutine (BossAttacks ());
 			StartCoroutine (bm.Hover ());
 		}
+		bs.health = bs.maxHealth;
 		healthBar = GameObject.Find ("Boss Health Bar").GetComponent<Slider>();
+		healthBar.value = bs.health;
 	}
 	
 	public void TakeDamage(float damage) {
@@ -41,7 +47,9 @@ public class Boss1Controller : MonoBehaviour {
 			bs.health -= damage;
 			healthBar.value = bs.health;
 			if (bs.health <= bs.maxHealth / 2) {
-				bs.phase = 2;
+				if (bs.phase != 2) {
+					bs.phase = 2;
+				}
 			}
 			if (bs.health <= 0) {
 				StopCoroutine (AimTurrets ());
@@ -105,6 +113,8 @@ public class Boss1Controller : MonoBehaviour {
 	IEnumerator DeathAnimation(){
 		deathExplosions.Play ();
 		yield return new WaitForSeconds (deathExplosions.main.duration);
+		eod.SpawnEffect ();
+		gc.boss1Dead = true;
 		Destroy (gameObject);
 	}
 }

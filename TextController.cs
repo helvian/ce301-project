@@ -6,11 +6,13 @@ public class TextController : MonoBehaviour {
 
 	private int score;
 	private int health;
+	private string weapon = "Gatling";
 
 	public Text scoreText;
 	public Text healthText;
 	public Text gameOverText;
 	public Text restartText;
+	public Text weaponText;
 
 	public void UpdateScore(int s){
 		this.score += s;
@@ -33,5 +35,10 @@ public class TextController : MonoBehaviour {
 	public void HideGameOverAndRestart() {
 		gameOverText.enabled = false;
 		restartText.enabled = false;
+	}
+
+	public void UpdateWeapon(string w) {
+		this.weapon = w;
+		weaponText.text = "Weapon: " + weapon;
 	}
 }
