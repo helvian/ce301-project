@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 /*
  * Script for fading in/out scenes
+ * REPURPOSED FROM CE318 PROJECT
  */
 
 public class Fader : MonoBehaviour {

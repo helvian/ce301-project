@@ -2,16 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Handle the movement of the first boss independent of the animations
+ */
+
 public class Boss1Movement : MonoBehaviour {
 
-	public Vector3 rightAnchor; //point on right to move to
-	public Vector3 leftAnchor; //point on left to move to
-	public Vector3 farLeftAnchor; 
-	public Vector3 centerAnchor;
+	public Vector3 rightAnchor; //point on the right to move to
+	public Vector3 leftAnchor; //point on the left to move to
+	public Vector3 farLeftAnchor; //point off screen to move to
+	public Vector3 centerAnchor; //point in the center to move to
 	public float offset; //how far from anchors to move to
-	public bool movingLeft = false;
-	public float speed = 0.02f;
+	public bool movingLeft = false; //which way the ship is moving
+	public float speed = 0.02f; //how fast to move
 
+	//related script
 	public BossStats bs;
 
 	void Awake() {
@@ -45,7 +50,9 @@ public class Boss1Movement : MonoBehaviour {
 		StartCoroutine (PhaseTransition ());
 	}
 
+	//movement that happens when boss transitions into phase 2
 	IEnumerator PhaseTransition() {
+		//move left off screen
 		while (movingLeft) {
 			transform.position = Vector3.Lerp (transform.position, farLeftAnchor, speed * Time.deltaTime);
 			if (Vector3.Distance (transform.position, farLeftAnchor) < offset) {
@@ -56,6 +63,7 @@ public class Boss1Movement : MonoBehaviour {
 			speed += 0.025f;
 			yield return new WaitForFixedUpdate ();
 		}
+		//move right, back on screen, to the center of the screen (same vertical level)
 		while (!movingLeft) {
 			transform.position = Vector3.Lerp (transform.position, centerAnchor, speed * Time.deltaTime);
 			if (Vector3.Distance (transform.position, centerAnchor) < offset) {

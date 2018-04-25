@@ -9,12 +9,12 @@ using UnityEngine;
 
 public class GetLightCollider : MonoBehaviour {
 
-	public ParticleSystem ps;
+	public ParticleSystem ps; //the weapon this script is attached to
 
 	void Start () {
 		ps = GetComponent<ParticleSystem> ();
-		Collider player = GameObject.FindGameObjectWithTag ("Light Polarity").GetComponent<Collider> ();
-		ps.trigger.SetCollider (0, player);
+		Collider player = GameObject.FindGameObjectWithTag ("Light Polarity").GetComponent<Collider> (); //get the light collider
+		ps.trigger.SetCollider (0, player); //set the collider for this weapon to respond to
 	}
 
 

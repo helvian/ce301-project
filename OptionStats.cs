@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Container script for stats pertaining to Options
+ */
+
 public class OptionStats : MonoBehaviour {
-	public float speed;
-	public float maxSpeed;
-	public float tilt;
 
 	public float fireRate;
 	public float nextFire;
