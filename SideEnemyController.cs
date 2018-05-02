@@ -68,7 +68,6 @@ public class SideEnemyController : MonoBehaviour {
 
 		shot.transform.parent = GameObject.Find("Dead Particles").transform;
 
-		Destroy (shot);
 		Destroy (shot.gameObject, 10.0f);
 		Destroy (gameObject);
 	}
